@@ -8,11 +8,15 @@ import UserAvatar from "@/components/user-avatar";
 import { useSession } from "@/app/(main)/session-provider";
 import { Button } from "@/components/ui/button";
 import "./styles.css";
+import { useSubmitPostMutation } from "./mutations";
 
 type Props = {};
 
 export default function PostEditor({}: Props) {
   const { user } = useSession();
+
+  const mutation = useSubmitPostMutation();
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -30,9 +34,12 @@ export default function PostEditor({}: Props) {
       blockSeparator: "\n",
     }) || "";
 
-  async function onSubmit() {
-    await submitPost(input);
-    editor?.commands.clearContent();
+  function onSubmit() {
+    mutation.mutate(input, {
+      onSuccess: () => {
+        editor?.commands.clearContent();
+      },
+    });
   }
   return (
     <div className="flex flex-col gap-5 rounded-2xl bg-card p-5 shadow-sm">
@@ -46,10 +53,10 @@ export default function PostEditor({}: Props) {
       <div className="flex justify-end">
         <Button
           onClick={onSubmit}
-          disabled={!input?.trim()}
+          disabled={mutation.isPending || !input?.trim()}
           className="min-w-20"
         >
-          Post
+          {mutation.isPending ? "Posting..." : "Post"}
         </Button>
       </div>
     </div>
