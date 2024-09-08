@@ -15,7 +15,7 @@ export function useSubmitPostMutation() {
   const mutation = useMutation({
     mutationFn: submitPost,
     onSuccess: async (newPost) => {
-      const queryFilter: QueryFilters = { queryKey: ["post--feed", "for-you"] };
+      const queryFilter: QueryFilters = { queryKey: ["post-feed", "for-you"] };
 
       //   cancelQueries(key), which will cancel the query and revert it back to its previous state.
       await queryClient.cancelQueries(queryFilter);

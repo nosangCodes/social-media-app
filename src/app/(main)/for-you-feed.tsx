@@ -1,12 +1,13 @@
 "use client";
 import InfiniteScrollContainer from "@/components/infinite-scroll-container";
 import PostsLoadingSkeletion from "@/components/posts-loading-skeletion";
+import DeletePostDialog from "@/components/posts/delete-post-dialog";
 import Post from "@/components/posts/post";
 import { Button } from "@/components/ui/button";
 import kyInstance from "@/lib/ky";
 import { PostData, PostsPage } from "@/lib/types";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Delete, Loader2 } from "lucide-react";
 import React from "react";
 
 type Props = {};
@@ -20,7 +21,7 @@ export default function ForYouFeed({}: Props) {
     isFetching,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["post--feed", "for-you"],
+    queryKey: ["post-feed", "for-you"],
     queryFn: ({ pageParam }) =>
       kyInstance
         .get(
