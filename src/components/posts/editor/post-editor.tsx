@@ -18,6 +18,7 @@ export default function PostEditor({}: Props) {
   const mutation = useSubmitPostMutation();
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         bold: false,

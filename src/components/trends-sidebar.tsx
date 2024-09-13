@@ -1,12 +1,13 @@
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
-import { userDataSelect } from "@/lib/types";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import UserAvatar from "./user-avatar";
 import { unstable_cache } from "next/cache";
 import { formatNumber } from "@/lib/utils";
+import FollowButton from "./follow-button";
+import { getUserDataSelect } from "@/lib/types";
 
 type Props = {};
 
@@ -30,10 +31,16 @@ async function WhoToFollow() {
       NOT: {
         id: user.id,
       },
+      followers: {
+        none: {
+          followerId: user.id,
+        },
+      },
     },
-    select: userDataSelect,
+    select: getUserDataSelect(user.id),
     take: 5,
   });
+  console.log("🚀 ~ WhoToFollow ~ usersToFollow:", usersToFollow)
 
   return (
     <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm">
@@ -55,7 +62,15 @@ async function WhoToFollow() {
               </p>
             </div>
           </Link>
-          <button>Follow</button>
+          <FollowButton
+            userId={user.id}
+            initialState={{
+              followers: user._count.followers,
+              isFollowedByUser: user.followers.some(
+                ({ followerId }) => followerId === user.id,
+              ),
+            }}
+          />
         </div>
       ))}
     </div>
