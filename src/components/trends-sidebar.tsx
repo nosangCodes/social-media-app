@@ -40,7 +40,6 @@ async function WhoToFollow() {
     select: getUserDataSelect(user.id),
     take: 5,
   });
-  console.log("🚀 ~ WhoToFollow ~ usersToFollow:", usersToFollow)
 
   return (
     <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm">

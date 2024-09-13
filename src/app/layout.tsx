@@ -16,10 +16,11 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | socials",
-    default: "socials",
+    template: "%s | Piclogue",
+    default: "Piclogue",
   },
-  description: "The social media app.",
+  description:
+    "Piclogue is a vibrant social media platform where visuals meet conversation. Share stunning images, write about topics that matter, and engage with a community that values creativity and dialogue. Follow others, discover new content, and join meaningful discussions — because every picture tells a story, and every story starts a conversation. Join Piclogue and be part of the conversation today.",
 };
 
 export default function RootLayout({
