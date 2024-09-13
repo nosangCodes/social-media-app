@@ -9,5 +9,5 @@ type Props = {
 export default async function layout({ children }: Props) {
   const { user } = await validateRequest();
   if (user) redirect("/");
-  return <>{children}</>;
+  return <section className="md:max-w-5xl mx-auto">{children}</section>;
 }

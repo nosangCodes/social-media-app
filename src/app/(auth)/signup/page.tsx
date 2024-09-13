@@ -17,7 +17,7 @@ export default function page({}: Props) {
       <div className="max-2-[64rem] flex h-full max-h-[40rem] w-full overflow-hidden rounded-2xl bg-card shadow-2xl">
         <div className="w-full space-y-10 overflow-y-auto p-10 md:w-1/2">
           <div className="space-y-1 text-center">
-            <h1 className="text-3xl font-bold">Sign up to backbok</h1>
+            <h1 className="text-3xl font-bold">Sign up to Piclogue</h1>
             <p className="text-muted-foreground">
               Lorem ipsum <span className="italic">dolor</span> sit amet.
             </p>
