@@ -10,8 +10,9 @@ import { formatNumber } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import React, { cache } from "react";
+import React, { cache, Suspense } from "react";
 import UsersFeed from "./users-feed";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   params: {
@@ -64,7 +65,7 @@ export default async function page({ params: { username } }: Props) {
       <div className="w-full min-w-0 space-y-5">
         <UserProfile userData={user} loggedInUserId={loggedInUser.id} />
         <div className="rounded-2xl bg-card p-5 shadow-sm">
-          <h2 className="capitalize text-center text-2xl font-bold">
+          <h2 className="text-center text-2xl font-bold capitalize">
             {user.displayName}&apos;s posts
           </h2>
         </div>
