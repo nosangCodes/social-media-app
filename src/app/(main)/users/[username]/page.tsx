@@ -13,6 +13,7 @@ import { notFound } from "next/navigation";
 import React, { cache, Suspense } from "react";
 import UsersFeed from "./users-feed";
 import { Loader2 } from "lucide-react";
+import EditProfileButton from "./edit-profile-button";
 
 type Props = {
   params: {
@@ -116,7 +117,7 @@ async function UserProfile({ loggedInUserId, userData }: UserProfileProps) {
           </div>
         </div>
         {userData.id === loggedInUserId ? (
-          <Button>Edit profile</Button>
+          <EditProfileButton user={userData} />
         ) : (
           <FollowButton userId={userData.id} initialState={followerInfo} />
         )}
