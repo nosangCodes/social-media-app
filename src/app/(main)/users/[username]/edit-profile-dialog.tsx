@@ -29,6 +29,8 @@ import Image, { StaticImageData } from "next/image";
 import { Label } from "@/components/ui/label";
 import avatarUrlPlaceholder from "@/assets/avatar-placeholder.png";
 import { Camera } from "lucide-react";
+import CropImageDialog from "@/components/crop-image-dialog";
+import Resizer from "react-image-file-resizer";
 
 type Props = {
   user: UserData;
@@ -49,17 +51,26 @@ export default function EditProfileDialog({ open, onClose, user }: Props) {
 
   const mutation = useUpdateUserProfileMutation();
   const onSubmit = (values: UpdateUserProfileValues) => {
+    const newAvatarUrl = croppedAvatar
+      ? new File([croppedAvatar], `avatar_${user.id}.webp`)
+      : undefined;
+
+    console.log("🚀 ~ onSubmit ~ croppedAvatar:", croppedAvatar);
+    console.log("🚀 ~ onSubmit ~ newAvatarUrl:", newAvatarUrl);
     mutation.mutate(
       {
         values,
+        avatar: newAvatarUrl,
       },
       {
         onSuccess: () => {
+          setCroppedAvatar(null);
           onClose(false);
         },
       },
     );
   };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
@@ -129,7 +140,19 @@ function AvatarInput({ onImageCropped, src }: AvatarInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onFileSelect = (file?: File | null) => {
+    console.log("🚀 ~ onFileSelect ~ file:", file)
     if (!file) return;
+
+    Resizer.imageFileResizer(
+      file,
+      1024,
+      1024,
+      "WEBP",
+      100,
+      0,
+      (uri) => setImageToCrop(uri as File),
+      "file",
+    );
   };
   return (
     <>
@@ -152,10 +175,24 @@ function AvatarInput({ onImageCropped, src }: AvatarInputProps) {
           height={150}
           width={150}
         />
-        <span className="absolute inset-0 m-auto flex size-12 items-center justify-center divide-gray-200 rounded-full bg-black bg-opacity-30 text-white transition-colors group-hover:bg-opacity-25">
+        <span className="absolute inset-0 m-auto flex size-12 items-center justify-center divide-gray-200 rounded-full bg-black bg-opacity-30 text-white transition-opacity group-hover:bg-opacity-25">
           <Camera size={24} />
         </span>
       </button>
+
+      {imageToCrop && (
+        <CropImageDialog
+          onCropped={onImageCropped}
+          src={URL.createObjectURL(imageToCrop)}
+          cropAspecttRatio={1}
+          onClose={() => {
+            setImageToCrop(undefined);
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+          }}
+        />
+      )}
     </>
   );
 }
