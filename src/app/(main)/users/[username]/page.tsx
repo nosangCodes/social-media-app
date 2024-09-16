@@ -14,6 +14,7 @@ import React, { cache, Suspense } from "react";
 import UsersFeed from "./users-feed";
 import { Loader2 } from "lucide-react";
 import EditProfileButton from "./edit-profile-button";
+import Linkify from "@/components/linkify";
 
 type Props = {
   params: {
@@ -125,9 +126,11 @@ async function UserProfile({ loggedInUserId, userData }: UserProfileProps) {
       {userData.bio && (
         <>
           <hr />
-          <div className="overflow-hidden whitespace-pre-line break-words">
-            {userData.bio}
-          </div>
+          <Linkify>
+            <div className="overflow-hidden whitespace-pre-line break-words">
+              {userData.bio}
+            </div>
+          </Linkify>
         </>
       )}
     </div>

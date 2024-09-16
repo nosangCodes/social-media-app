@@ -2,11 +2,13 @@ import { PostData } from "@/lib/types";
 import React from "react";
 import UserAvatar from "../user-avatar";
 import Link from "next/link";
-import { formatrelativeDate } from "@/lib/utils";
+import { cn, formatrelativeDate } from "@/lib/utils";
 import PostMoreButton from "./post-more-button";
 import { useSession } from "@/app/(main)/session-provider";
 import Linkify from "../linkify";
 import UserTooltip from "../user-tooltip";
+import { Media } from "@prisma/client";
+import Image from "next/image";
 
 type Props = {
   post: PostData;
@@ -55,6 +57,61 @@ export default function Post({ post }: Props) {
       <Linkify>
         <div className="whitespace-pre-line break-words">{post.content}</div>
       </Linkify>
+      {!!post.attachments.length && (
+        <MediaPreviews attachments={post.attachments} />
+      )}
     </article>
+  );
+}
+
+interface MediaPreviewProps {
+  media: Media;
+}
+
+function MediaPreview({ media }: MediaPreviewProps) {
+  if (media.type === "IMAGE") {
+    return (
+      <Image
+        alt="Image preview"
+        className="mx-auto size-fit max-h-[30rem] rounded-2xl"
+        height={500}
+        width={500}
+        src={media.url}
+      />
+    );
+  }
+
+  if (media.type === "VIDEO") {
+    return (
+      <div>
+        <video
+          controls
+          className="mx-auto size-fit max-h-[30rem] rounded-2xl"
+          src={media.url}
+          aria-label="video preview"
+        />
+      </div>
+    );
+  }
+
+  return <p className="text-destructive">Unsupported media type.</p>;
+}
+
+interface MediaPreviewsProps {
+  attachments: Array<Media>;
+}
+
+function MediaPreviews({ attachments }: MediaPreviewsProps) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-3",
+        attachments.length > 3 && "sm:grid sm:grid-cols-2",
+      )}
+    >
+      {attachments.map((attachment) => (
+        <MediaPreview key={attachment.id} media={attachment} />
+      ))}
+    </div>
   );
 }

@@ -55,8 +55,6 @@ export default function EditProfileDialog({ open, onClose, user }: Props) {
       ? new File([croppedAvatar], `avatar_${user.id}.webp`)
       : undefined;
 
-    console.log("🚀 ~ onSubmit ~ croppedAvatar:", croppedAvatar);
-    console.log("🚀 ~ onSubmit ~ newAvatarUrl:", newAvatarUrl);
     mutation.mutate(
       {
         values,
@@ -140,7 +138,6 @@ function AvatarInput({ onImageCropped, src }: AvatarInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onFileSelect = (file?: File | null) => {
-    console.log("🚀 ~ onFileSelect ~ file:", file)
     if (!file) return;
 
     Resizer.imageFileResizer(
