@@ -3,7 +3,6 @@ import React, { ClipboardEvent, useRef } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import { submitPost } from "./actions";
 import UserAvatar from "@/components/user-avatar";
 import { useSession } from "@/app/(main)/session-provider";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,7 @@ type Props = {};
 
 export default function PostEditor({}: Props) {
   const { user } = useSession();
+  console.log("PostEditor rendered")
 
   const mutation = useSubmitPostMutation();
   const {
@@ -37,7 +37,6 @@ export default function PostEditor({}: Props) {
   const { onClick, ...rootProps } = getRootProps();
 
   const editor = useEditor({
-    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         bold: false,
@@ -73,14 +72,14 @@ export default function PostEditor({}: Props) {
     const files = Array.from(e.clipboardData.items)
       .filter((item) => item.kind === "file")
       .map((item) => item.getAsFile()) as File[];
-      startUpload(files)
+    startUpload(files);
   }
 
   return (
     <div className="flex flex-col gap-5 rounded-2xl bg-card p-5 shadow-sm">
       <div className="flex gap-5">
         <UserAvatar avatarUrl={user.avatarUrl} />
-        <div className="w-full" {...rootProps}>
+        <div className="w-full overflow-x-hidden" {...rootProps}>
           <EditorContent
             editor={editor}
             className={cn(
@@ -169,6 +168,7 @@ function AttachmentPreview({
   attachment: { file, mediaId, isUploading },
   onRemoveClick,
 }: AttachmentPreviewProps) {
+  console.log("attachment preview rendered");
   const src = URL.createObjectURL(file);
   return (
     <div

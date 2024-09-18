@@ -66,6 +66,8 @@ model Media {
   type   MediaType
   url    String
 
+  createdAt DateTime @default(now())
+
   @@map("post_media")
 }
 
