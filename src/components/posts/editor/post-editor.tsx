@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { ClipboardEvent, useRef } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -13,6 +13,7 @@ import useMediaUpload, { Attachment } from "./use-media-upload";
 import { ImageIcon, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useDropzone } from "@uploadthing/react";
 
 type Props = {};
 
@@ -28,6 +29,12 @@ export default function PostEditor({}: Props) {
     isUploading,
     uploadProgress,
   } = useMediaUpload();
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: startUpload,
+  });
+
+  const { onClick, ...rootProps } = getRootProps();
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -61,14 +68,29 @@ export default function PostEditor({}: Props) {
       },
     );
   }
+
+  function onPaste(e: ClipboardEvent<HTMLInputElement>) {
+    const files = Array.from(e.clipboardData.items)
+      .filter((item) => item.kind === "file")
+      .map((item) => item.getAsFile()) as File[];
+      startUpload(files)
+  }
+
   return (
     <div className="flex flex-col gap-5 rounded-2xl bg-card p-5 shadow-sm">
       <div className="flex gap-5">
         <UserAvatar avatarUrl={user.avatarUrl} />
-        <EditorContent
-          editor={editor}
-          className="max-h-[20rem] w-full overflow-y-auto rounded-xl bg-background px-5 py-3"
-        />
+        <div className="w-full" {...rootProps}>
+          <EditorContent
+            editor={editor}
+            className={cn(
+              "max-h-[20rem] w-full overflow-y-auto rounded-xl bg-background px-5 py-3",
+              isDragActive && "outline-dashed outline-primary",
+            )}
+            onPaste={onPaste}
+          />
+          <input {...getInputProps()} />
+        </div>
       </div>
       {!!attachments.length && (
         <AttachmentPreviews
@@ -76,7 +98,7 @@ export default function PostEditor({}: Props) {
           removeAttachment={removeAttachment}
         />
       )}
-      <div className="flex justify-end items-center">
+      <div className="flex items-center justify-end">
         {isUploading && (
           <>
             <span className="text-sm">{uploadProgress ?? 0}%</span>
