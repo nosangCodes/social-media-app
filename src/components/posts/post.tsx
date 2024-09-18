@@ -1,3 +1,4 @@
+"use client";
 import { PostData } from "@/lib/types";
 import React from "react";
 import UserAvatar from "../user-avatar";
@@ -42,6 +43,7 @@ export default function Post({ post }: Props) {
               className="block text-sm text-muted-foreground hover:underline"
               aria-label="post page"
               href={`/posts/${post.id}`}
+              suppressHydrationWarning
             >
               {formatrelativeDate(post.createdAt)}
             </Link>
